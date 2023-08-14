@@ -71,6 +71,35 @@ export const EditElement = ({ properties, name }: Props) => {
     });
   };
 
+  // Function to handle property deletion
+  const handleDelete = (propertyKey: string) => {
+    const newProperties = { ...elementProperties };
+
+    if (newProperties) {
+      delete newProperties[propertyKey];
+    }
+
+    setElementProperties(newProperties);
+
+    const updatedListElements = {
+      ...editedSystemProperties?.energySystem.Energy_System.list_of_elements,
+      [name]: newProperties,
+    };
+    const updatedEnergySystem = {
+      ...editedSystemProperties?.energySystem.Energy_System,
+      list_of_elements: updatedListElements,
+    };
+
+    setEditedSystemProperties({
+      energySystem: { Energy_System: updatedEnergySystem },
+    });
+
+    console.log("updatedEnergySystem", {energySystem: { Energy_System: updatedEnergySystem }});
+    // setEditedSystemProperties({
+    //   energySystem: updatedEnergySystem,
+    // });
+  };
+
   // Function to PUT request to the API with the elements updated
   const handleEditElement = () => {
     fetchData(
@@ -106,7 +135,7 @@ export const EditElement = ({ properties, name }: Props) => {
     return <h1>Ocurrio un error en la peticion</h1>;
   }
 
-  const elementProps = properties || {};
+  const elementProps = elementProperties || {};
 
   return (
     <Dialog>
@@ -135,6 +164,14 @@ export const EditElement = ({ properties, name }: Props) => {
                     handleElementPropertyChange(key, e.target.value)
                   }
                 />
+                <Button
+                  variant="default"
+                  className="hover:bg-blue-400 bg-transparent text-black h-6 w-6 m-2"
+                  size="icon"
+                  onClick={() => handleDelete(key)}
+                >
+                  <Icons.trash className="h-4 w-4" />
+                </Button>
               </div>
             ))}
           </div>

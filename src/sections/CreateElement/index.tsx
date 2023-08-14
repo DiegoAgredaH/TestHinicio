@@ -19,6 +19,7 @@ import {
   setEnergySystem,
 } from "../../store/slices/EnergySystem/systemSlice";
 import { useToast } from "../../components/ui/use-toast";
+import { Icons } from "../../components/ui/Icons";
 
 type Properties = {
   [prop: string]: number | boolean | string | null;
@@ -46,6 +47,11 @@ export const CreateElement = () => {
   // Function to add new property input fields
   const addProperty = () => {
     setPropertyInputs([...propertyInputs, { property: "", value: "" }]);
+  };
+
+  const handleDelete = (key: number) => {
+    const newPropertyInputs = propertyInputs.filter((_, index) => index !== key);
+    setPropertyInputs(newPropertyInputs);
   };
 
   // Function to handle the creation of an element
@@ -137,6 +143,7 @@ export const CreateElement = () => {
                     updatedInputs[index].property = e.target.value;
                     setPropertyInputs(updatedInputs);
                   }}
+                  className="mr-2"
                 />
                 <Input
                   type="text"
@@ -148,6 +155,14 @@ export const CreateElement = () => {
                     setPropertyInputs(updatedInputs);
                   }}
                 />
+                <Button
+                  variant="default"
+                  className="hover:bg-blue-400 bg-transparent text-black h-6 w-6 m-2"
+                  size="icon"
+                  onClick={() => handleDelete(index)}
+                >
+                  <Icons.trash className="h-4 w-4" />
+                </Button>
               </div>
             ))}
             <ScrollBar orientation="vertical"></ScrollBar>
