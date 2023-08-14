@@ -10,7 +10,7 @@ import {
 } from "../ui/Card";
 
 interface Props {
-  [key: string]: string | boolean | number | null;
+  properties:{[key: string]: string | boolean | number | null };
   name: string;
 }
 export const Element = ({ properties, name }: Props) => {
@@ -26,12 +26,15 @@ export const Element = ({ properties, name }: Props) => {
       </CardHeader>
 
       <CardContent>
+        {/* Display the first 3 properties as key-value pairs */}
         {Object.entries(elementProps)
           .slice(0, 3)
           .map(([key, value]) => (
             <div key={key} className="mt-2 flex items-center">
               <p className="font-bold text-black mr-2">{key}:</p>
-              <p className="text-black">{typeof value === 'boolean' ? value.toString() : String(value)}</p>
+              <p className="text-black">
+                {typeof value === "boolean" ? value.toString() : String(value)}
+              </p>
             </div>
           ))}
       </CardContent>

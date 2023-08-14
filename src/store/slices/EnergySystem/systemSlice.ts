@@ -3,17 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface InitialState {
   energySystem: {
     Energy_System: {
-      list_of_elements?:{
-        [prop: string]: 
-        | number 
-        | boolean 
-        | string 
-        | null
-      }
+      list_of_elements?: {
+        [prop: string]: {
+          [prop: string]: number | boolean | string | null;
+        };
+      };
     };
   };
 }
-
 
 const initialState: InitialState = {
   energySystem: {

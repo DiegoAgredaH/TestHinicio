@@ -3,15 +3,13 @@ import { useAppSelector } from "../../store/hooks";
 import { EditSystem } from "../EditSystem";
 
 interface EnergySystemProperties {
-  [key: string]:
-    | boolean
-    | string
-    | number
-    | null
-    | Record<string, boolean | string | number | null>;
+  [prop: string]:
+    | { [prop: string]: { [prop: string]: string | number | boolean | null } }
+    | undefined;
 }
 
 export const EnergySystem = () => {
+  
   const systemProperties = useAppSelector((state) => state.energySystem);
 
   const energySystemProperties: EnergySystemProperties =

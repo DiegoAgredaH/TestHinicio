@@ -13,6 +13,7 @@ export const useApi = () => {
   const [error, setError] = useState<AxiosError | null | unknown>();
   const [loading, setLoading] = useState(true);
 
+  // Function to fetch data from the API
   const fetchData = async (
     method: Method,
     params: Record<string, string | boolean | number> = {},
@@ -27,14 +28,15 @@ export const useApi = () => {
         url: apiUrl,
         headers: defaultHeaders,
       };
-
+      
+      // Handle request parameters based on the HTTP method
       if (method === "GET") {
         config.params = { ...params };
       } else if (method === "PUT") {
-        config.data =  data ;
+        config.data = data;
       }
       const response = await axios(config);
-      console.log("response", response);
+
       setData(response.data);
     } catch (err) {
       setError(err);

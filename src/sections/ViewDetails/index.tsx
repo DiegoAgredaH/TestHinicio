@@ -10,29 +10,33 @@ import {
 } from "../../components/ui/Dialog";
 import { Close } from "@radix-ui/react-dialog";
 import { ScrollArea, ScrollBar } from "../../components/ui/ScrollArea";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "../../components/ui/Input";
 import { Icons } from "../../components/ui/Icons";
 
+type Element = {
+  [key: string]: { [key: string]: string | boolean | number | null };
+};
 interface Props {
-  [key: string]: string | boolean | number | null;
+  properties: Element;
   name: string;
 }
 
 export const ViewDetails = ({ properties, name }: Props) => {
-
+  // State to store the search term
   const [searchTerm, setSearchTerm] = useState("");
+
+  // State to store the filtered elements based on the search term
   const [filteredElements, setFilteredElements] = useState({});
 
+  // Handler for the search input change
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const filterElements = (
-    elements: Record<string, unknown>,
-    searchTerm: string
-  ) => {
-    const filteredElements = {};
+  // Function to filter properties based on the search term
+  const filterElements = (elements: Element, searchTerm: string) => {
+    const filteredElements: Element = {};
 
     for (const key in elements) {
       if (key.includes(searchTerm)) {
@@ -44,10 +48,7 @@ export const ViewDetails = ({ properties, name }: Props) => {
 
   useEffect(() => {
     if (properties) {
-      filterElements(
-        properties,
-        searchTerm
-      );
+      filterElements(properties, searchTerm);
     }
     // eslint-disable-next-line
   }, [properties, searchTerm]);

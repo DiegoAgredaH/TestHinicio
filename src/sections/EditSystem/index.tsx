@@ -22,34 +22,47 @@ import { useToast } from "../../components/ui/use-toast";
 import { ScrollArea, ScrollBar } from "../../components/ui/ScrollArea";
 
 interface EnergySystemProperties {
-  [key: string]:
-    | boolean
-    | string
-    | number
-    | null
-    | Record<string, boolean | string | number | null>;
+  [key: string]: {
+    [key: string]:
+      | boolean
+      | string
+      | number
+      | null
+      | Record<string, boolean | string | number | null>;
+  };
 }
 
 export const EditSystem = () => {
+  // Get the system properties from Redux state
   const systemProperties = useAppSelector((state) => state.energySystem);
+
+  // Dispatch function from Redux
   const dispatch = useAppDispatch();
+
+  // Custom API hook for fetching data
   const { data, error, fetchData } = useApi();
+
+  // State for edited system properties
   const [editedSystemProperties, setEditedSystemProperties] =
     useState<InitialState>(systemProperties);
 
   const energySystemProperties: EnergySystemProperties =
     systemProperties.energySystem.Energy_System || {};
 
+  // Filter out properties that shouldn't be displayed (e.g., "list_of_elements")
   const filteredProperties = Object.keys(energySystemProperties).filter(
     (key) => key !== "list_of_elements"
   );
 
+  // Custom toast hook
   const { toast } = useToast();
 
+  // Function to handle changes in system properties
   const handleSystemPropertyChange = (
     propertyKey: string,
     value: string | boolean | number
   ) => {
+    // Update the editedSystemProperties with the modified property
     const updatedEnergySystem = {
       ...editedSystemProperties?.energySystem.Energy_System,
       [propertyKey]: value,
@@ -60,7 +73,8 @@ export const EditSystem = () => {
     });
   };
 
-  const handleSubmit = () => {
+  // Function to PUT request to the API with the system properties updated
+  const handleEditSystem = () => {
     fetchData(
       "PUT",
       {},
@@ -68,10 +82,12 @@ export const EditSystem = () => {
     );
   };
 
+  // Update editedSystemProperties when the Redux state changes
   useEffect(() => {
     setEditedSystemProperties(systemProperties);
   }, [systemProperties]);
 
+  // Handle API responses
   useEffect(() => {
     if (data) {
       if (JSON.stringify(data) === `{"updated":"True"}`) {
@@ -130,9 +146,7 @@ export const EditSystem = () => {
 
         <DialogFooter>
           <Close asChild>
-            <Button type="submit" onClick={handleSubmit}>
-              Save changes
-            </Button>
+            <Button onClick={handleEditSystem}>Save changes</Button>
           </Close>
         </DialogFooter>
       </DialogContent>

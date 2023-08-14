@@ -12,26 +12,54 @@ import { Icons } from "../../components/ui/Icons";
 import { ChangeEvent, useEffect, useState } from "react";
 import { CreateElement } from "../CreateElement";
 
-export const ElementsList = () => {
-  const systemProperties = useAppSelector((state) => state.energySystem);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredElements, setFilteredElements] = useState({});
+interface ElementProperties {
+  [key: string]: {
+    [key: string]:
+      | boolean
+      | string
+      | number
+      | null
+      | Record<string, boolean | string | number | null>;
+  };
+}
 
+export const ElementsList = () => {
+  // Get the system properties from the Redux store
+  const systemProperties = useAppSelector((state) => state.energySystem);
+
+  // State to store the search term
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // State to store the filtered elements based on the search term
+  const [filteredElements, setFilteredElements] = useState<
+    ElementProperties | undefined
+  >({});
+
+  // Handler for the search input change
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const filterElements = (elements: Record<string, unknown>, searchTerm: string) => {
-    const filteredElements = {};
+  // Function to filter elements based on the search term
+  const filterElements = (
+    elements: ElementProperties | undefined,
+    searchTerm: string
+  ) => {
+    const filtered: ElementProperties | undefined = {};
 
+    // Loop through the elements and filter them based on the search term
     for (const key in elements) {
-      if (key.toLowerCase().includes(searchTerm.toLowerCase())) {
-        filteredElements[key] = elements[key];
+      if (
+        typeof elements[key] === "string" &&
+        key.toLowerCase().includes(searchTerm.toLowerCase())
+      ) {
+        filtered[key] = elements[key];
       }
     }
-    setFilteredElements(filteredElements);
+    setFilteredElements(filtered);
   };
 
+  // UseEffect to filter elements when system properties or search term changes
   useEffect(() => {
     if (systemProperties.energySystem.Energy_System.list_of_elements) {
       filterElements(
@@ -42,6 +70,7 @@ export const ElementsList = () => {
     // eslint-disable-next-line
   }, [systemProperties, searchTerm]);
 
+  // UseEffect to set filtered elements initially when system properties change
   useEffect(() => {
     setFilteredElements(
       systemProperties.energySystem.Energy_System.list_of_elements
@@ -71,7 +100,9 @@ export const ElementsList = () => {
           {Object.entries(filteredElements).map(([key, value]) => (
             <Element
               key={key}
-              properties={value}
+              properties={
+                value as { [key: string]: string | number | boolean | null }
+              }
               name={key}
               className="flex-shrink-0 m-2"
             />

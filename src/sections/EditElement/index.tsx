@@ -22,24 +22,34 @@ import { useToast } from "../../components/ui/use-toast";
 import { ScrollArea, ScrollBar } from "../../components/ui/ScrollArea";
 
 interface Props {
-  [key: string]: string | boolean | number | null;
+  properties: { [key: string]: string | boolean | number | null };
   name: string;
 }
 
 export const EditElement = ({ properties, name }: Props) => {
+  // Get the system properties from Redux state
   const systemProperties = useAppSelector((state) => state.energySystem);
+
+  // Dispatch function from Redux
   const dispatch = useAppDispatch();
+
+  // Custom API hook for fetching data
   const { data, error, fetchData } = useApi();
+
+  // State for edited system properties and element properties
   const [editedSystemProperties, setEditedSystemProperties] =
     useState<InitialState>(systemProperties);
   const [elementProperties, setElementProperties] = useState(properties);
 
+  // Custom toast hook
   const { toast } = useToast();
 
-  const handleSystemPropertyChange = (
+  // Function to handle changing element properties
+  const handleElementPropertyChange = (
     propertyKey: string,
     value: string | boolean | number
   ) => {
+    // Update the element's properties and prepare the updated energy system
     const updatedProperties = {
       ...elementProperties,
       [propertyKey]: value,
@@ -56,15 +66,13 @@ export const EditElement = ({ properties, name }: Props) => {
       list_of_elements: updatedListElements,
     };
 
-    console.log("updatedListElements", updatedListElements);
-
     setEditedSystemProperties({
       energySystem: { Energy_System: updatedEnergySystem },
     });
   };
 
-  const handleSubmit = () => {
-    console.log("PUT", editedSystemProperties?.energySystem);
+  // Function to PUT request to the API with the elements updated
+  const handleEditElement = () => {
     fetchData(
       "PUT",
       {},
@@ -72,15 +80,18 @@ export const EditElement = ({ properties, name }: Props) => {
     );
   };
 
+  // Update editedSystemProperties when the Redux state changes
   useEffect(() => {
     setEditedSystemProperties(systemProperties);
   }, [systemProperties]);
 
+  // Handle API responses
   useEffect(() => {
     if (data) {
       if (JSON.stringify(data) === `{"updated":"True"}`) {
         fetchData("GET", { id: 0 });
       } else {
+        // Dispatch the updated energy system and show success toast
         dispatch(setEnergySystem({ energySystem: data }));
         toast({
           title: "Success !!!",
@@ -121,7 +132,7 @@ export const EditElement = ({ properties, name }: Props) => {
                   defaultValue={value?.toString()}
                   placeholder={value?.toString()}
                   onChange={(e) =>
-                    handleSystemPropertyChange(key, e.target.value)
+                    handleElementPropertyChange(key, e.target.value)
                   }
                 />
               </div>
@@ -131,9 +142,7 @@ export const EditElement = ({ properties, name }: Props) => {
         </ScrollArea>
         <DialogFooter>
           <Close asChild>
-            <Button type="submit" onClick={handleSubmit}>
-              Save changes
-            </Button>
+            <Button onClick={handleEditElement}>Save changes</Button>
           </Close>
         </DialogFooter>
       </DialogContent>
