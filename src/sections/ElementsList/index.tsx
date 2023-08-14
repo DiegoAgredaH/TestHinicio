@@ -10,6 +10,7 @@ import { useAppSelector } from "../../store/hooks";
 import { Input } from "../../components/ui/Input";
 import { Icons } from "../../components/ui/Icons";
 import { ChangeEvent, useEffect, useState } from "react";
+import { CreateElement } from "../CreateElement";
 
 export const ElementsList = () => {
   const systemProperties = useAppSelector((state) => state.energySystem);
@@ -63,6 +64,7 @@ export const ElementsList = () => {
             <Icons.search />
           </span>
         </div>
+        <CreateElement />
       </CardHeader>
       <ScrollArea className="h-[480px]">
         <CardContent className="grid gap-2 sm:grid-cols-3 animate-in slide-in-from-left-80">

@@ -46,11 +46,10 @@ export const DeleteElement = ({ name }: Props) => {
       ...editedSystemProperties?.energySystem.Energy_System,
       list_of_elements: updatedListElements,
     };
-    // console.log("PUT", { Energy_System: updatedEnergySystem });
+    
     fetchData(
       "PUT",
       {},
-      //   JSON.stringify({ id: 0, data: editedSystemProperties?.energySystem })
       JSON.stringify({ id: 0, data: { Energy_System: updatedEnergySystem } })
     );
   };
