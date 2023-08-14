@@ -17,7 +17,9 @@ Additionally, the reusable component collection from ShadCN has been leveraged t
    git clone https://github.com/DiegoAgredaH/TestHinicio.git
 ```
 
-3. Go inside 'TESTHINICIO' folder
+2. Go inside 'TESTHINICIO' folder
+
+3. Install the dependencies:
 
 ```js
    npm install
