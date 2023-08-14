@@ -87,7 +87,7 @@ export const CreateElement = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-lime-400 text-black font-bold">
+        <Button className="bg-blue-400 text-black font-bold">
           Create Element
         </Button>
       </DialogTrigger>

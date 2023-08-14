@@ -80,7 +80,7 @@ export const DeleteElement = ({ name }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" className="bg-red-500 h-6 w-6" size="icon">
+        <Button variant="default" className="bg-blue-400 text-black h-6 w-6" size="icon">
           <Icons.trash className="h-4 w-4" />
         </Button>
       </DialogTrigger>
