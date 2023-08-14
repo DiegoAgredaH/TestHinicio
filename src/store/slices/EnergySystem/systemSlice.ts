@@ -3,11 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface InitialState {
   energySystem: {
     Energy_System: {
-      list_of_elements?: {
+      [prop: string]: {
         [prop: string]: {
           [prop: string]: number | boolean | string | null;
         };
-      };
+      } | number | boolean | string | null;
     };
   };
 }

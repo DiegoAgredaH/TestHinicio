@@ -20,7 +20,6 @@ import { Close } from "@radix-ui/react-dialog";
 import { useToast } from "../../components/ui/use-toast";
 
 interface Props {
-  [key: string]: string | boolean | number | null;
   name: string;
 }
 

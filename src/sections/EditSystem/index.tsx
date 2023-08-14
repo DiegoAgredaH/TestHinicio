@@ -29,7 +29,7 @@ interface EnergySystemProperties {
       | number
       | null
       | Record<string, boolean | string | number | null>;
-  };
+  } | number | boolean | string | null;
 }
 
 export const EditSystem = () => {
@@ -47,7 +47,7 @@ export const EditSystem = () => {
     useState<InitialState>(systemProperties);
 
   const energySystemProperties: EnergySystemProperties =
-    systemProperties.energySystem.Energy_System || {};
+    editedSystemProperties.energySystem.Energy_System || {};
 
   // Filter out properties that shouldn't be displayed (e.g., "list_of_elements")
   const filteredProperties = Object.keys(energySystemProperties).filter(
@@ -80,6 +80,27 @@ export const EditSystem = () => {
       {},
       JSON.stringify({ id: 0, data: editedSystemProperties?.energySystem })
     );
+  };
+
+  // Function to handle property deletion
+  const handleDelete = (key: string) => {
+    
+    const updatedListElements = {
+      ...editedSystemProperties?.energySystem.Energy_System,
+    };
+
+    if (updatedListElements) {
+      delete updatedListElements[key];
+    }
+
+    const updatedEnergySystem = {
+      ...editedSystemProperties?.energySystem,
+      Energy_System: updatedListElements,
+    };
+
+    setEditedSystemProperties({
+      energySystem: updatedEnergySystem,
+    });
   };
 
   // Update editedSystemProperties when the Redux state changes
@@ -138,6 +159,14 @@ export const EditSystem = () => {
                     handleSystemPropertyChange(key, e.target.value)
                   }
                 />
+                <Button
+                  variant="default"
+                  className="hover:bg-blue-400 bg-transparent text-black h-6 w-6 m-2"
+                  size="icon"
+                  onClick={() => handleDelete(key)}
+                >
+                  <Icons.trash className="h-4 w-4" />
+                </Button>
               </div>
             ))}
           </div>
