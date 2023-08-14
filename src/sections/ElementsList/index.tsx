@@ -25,7 +25,7 @@ export const ElementsList = () => {
     const filteredElements = {};
 
     for (const key in elements) {
-      if (key.includes(searchTerm)) {
+      if (key.toLowerCase().includes(searchTerm.toLowerCase())) {
         filteredElements[key] = elements[key];
       }
     }
