@@ -1,27 +1,44 @@
-# React + TypeScript + Vite
+# Full Stack Test
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project has been developed using a combination of modern technologies to provide a great user experience. Vite has been employed as the development environment, ReactJS for building interactive components, Typescript to ensure a more secure and efficient codebase, and the Tailwind CSS style framework for elegant and responsive design.
 
-Currently, two official plugins are available:
+Additionally, the reusable component collection from ShadCN has been leveraged to efficiently construct the user interface, enabling us to streamline the development process and maintain visual consistency throughout the project.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Installation](#installation)
+- [Technologies](#technologies)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+1. Clone this repository:
 
 ```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+   git clone https://github.com/DiegoAgredaH/TestHinicio.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Install the dependencies:
+
+```js
+   npm install
+```
+
+3. Run the project: 	:rocket:
+
+```js
+   npm run dev
+```
+
+## Technologies
+
+- **Vite:** A rapid and modern development environment that enhances the efficiency of web application building.
+- **ShadCN:** A collection of reusable components we've used to efficiently build the user interface.
+- **ReactJS V18.2.15:** A JavaScript library for building interactive user interfaces and reusable components.
+- **Typescript:** A programming language that adds static types to JavaScript, improving readability and reducing errors.
+- **Tailwind CSS:** A highly customizable styling framework that allows us to create an appealing and adaptive interface.
+- **Axios:** A JavaScript library used for making HTTP requests from the browser or Node.js.
+- **Redux:** A predictable state container for JavaScript applications, which helps manage global state efficiently.
+
+## Created by: Diego Fernando Agreda
+
+August 13th, 2023
