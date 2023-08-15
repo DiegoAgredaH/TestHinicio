@@ -42,10 +42,6 @@ interface PropertyInput {
   value: string;
 }
 
-type Properties = {
-  [prop: string]: number | boolean | string | null;
-};
-
 export const EditSystem = () => {
   // Get the system properties from Redux state
   const systemProperties = useAppSelector((state) => state.energySystem);

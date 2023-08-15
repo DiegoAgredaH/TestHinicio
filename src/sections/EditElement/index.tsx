@@ -21,9 +21,17 @@ import { Input } from "../../components/ui/Input";
 import { useToast } from "../../components/ui/use-toast";
 import { ScrollArea, ScrollBar } from "../../components/ui/ScrollArea";
 
+type Element = {
+  [key: string]: { [key: string]: string | boolean | number | null };
+};
 interface Props {
-  properties: { [key: string]: string | boolean | number | null };
+  properties:Element;
   name: string;
+}
+
+interface PropertyInput {
+  property: string;
+  value: string;
 }
 
 export const EditElement = ({ properties, name }: Props) => {
@@ -40,6 +48,8 @@ export const EditElement = ({ properties, name }: Props) => {
   const [editedSystemProperties, setEditedSystemProperties] =
     useState<InitialState>(systemProperties);
   const [elementProperties, setElementProperties] = useState(properties);
+
+  const [propertyInputs, setPropertyInputs] = useState<PropertyInput[]>([]);
 
   // Custom toast hook
   const { toast } = useToast();
@@ -93,20 +103,52 @@ export const EditElement = ({ properties, name }: Props) => {
     setEditedSystemProperties({
       energySystem: { Energy_System: updatedEnergySystem },
     });
+  };
 
-    console.log("updatedEnergySystem", {energySystem: { Energy_System: updatedEnergySystem }});
-    // setEditedSystemProperties({
-    //   energySystem: updatedEnergySystem,
-    // });
+  // Function to add new property input fields
+  const addProperty = () => {
+    if (propertyInputs) {
+      setPropertyInputs([...propertyInputs, { property: "", value: "" }]);
+    } else {
+      setPropertyInputs([{ property: "", value: "" }]);
+    }
+  };
+
+  const handleDeleteProperty = (indexToDelete: number) => {
+    const newPropertyInputs = propertyInputs.filter(
+      (_, index) => index !== indexToDelete
+    );
+    setPropertyInputs(newPropertyInputs);
   };
 
   // Function to PUT request to the API with the elements updated
   const handleEditElement = () => {
+    let newEnergySystem = {
+      ...editedSystemProperties?.energySystem.Energy_System,
+    };
+
+    if (propertyInputs.length > 0) {
+      newEnergySystem = propertyInputs.reduce((updatedSystem, input) => {
+        return {
+          ...updatedSystem,
+          list_of_elements: {
+            ...updatedSystem.list_of_elements,
+            [name]: {
+              ...updatedSystem.list_of_elements?.[name] || {},
+              [input.property]: input.value
+            },
+          },
+        };
+      }, newEnergySystem);
+    }
+   
     fetchData(
       "PUT",
       {},
-      JSON.stringify({ id: 0, data: editedSystemProperties?.energySystem })
+      JSON.stringify({ id: 0, data: { Energy_System: newEnergySystem } })
     );
+    setElementProperties(newEnergySystem.list_of_elements[name])
+    setPropertyInputs([]);
   };
 
   // Update editedSystemProperties when the Redux state changes
@@ -152,6 +194,39 @@ export const EditElement = ({ properties, name }: Props) => {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-[400px]">
+          {propertyInputs?.map((input, index) => (
+            <div key={index} className="mt-2 mr-4 flex items-center">
+              <Input
+                type="text"
+                defaultValue={input.property}
+                placeholder={"Property:"}
+                onChange={(e) => {
+                  const updatedInputs = [...propertyInputs];
+                  updatedInputs[index].property = e.target.value;
+                  setPropertyInputs(updatedInputs);
+                }}
+                className="mr-2"
+              />
+              <Input
+                type="text"
+                defaultValue={input.value}
+                placeholder={"Value"}
+                onChange={(e) => {
+                  const updatedInputs = [...propertyInputs];
+                  updatedInputs[index].value = e.target.value;
+                  setPropertyInputs(updatedInputs);
+                }}
+              />
+              <Button
+                variant="default"
+                className="hover:bg-blue-400 bg-transparent text-black h-6 w-6 m-2"
+                size="icon"
+                onClick={() => handleDeleteProperty(index)}
+              >
+                <Icons.trash className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
           <div className="grid gap-4 py-4">
             {Object.entries(elementProps).map(([key, value]) => (
               <div key={key} className="mt-2 mr-4 flex items-center">
@@ -178,6 +253,9 @@ export const EditElement = ({ properties, name }: Props) => {
           <ScrollBar orientation="vertical"></ScrollBar>
         </ScrollArea>
         <DialogFooter>
+          <Button className="bg-blue-400" onClick={addProperty}>
+            Add Property
+          </Button>
           <Close asChild>
             <Button onClick={handleEditElement}>Save changes</Button>
           </Close>

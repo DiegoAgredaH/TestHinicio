@@ -171,11 +171,11 @@ export const CreateElement = () => {
         <DialogFooter>
           <div className="space-x-2">
             <Close asChild>
-              <Button onClick={handleCreateElement}>Save Element</Button>
-            </Close>
             <Button className="bg-blue-400" onClick={addProperty}>
               Add Property
             </Button>
+              <Button onClick={handleCreateElement}>Save Element</Button>
+            </Close>
           </div>
         </DialogFooter>
       </DialogContent>

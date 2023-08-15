@@ -9,8 +9,11 @@ import {
   CardTitle,
 } from "../ui/Card";
 
+type Element = {
+  [key: string]: { [key: string]: string | boolean | number | null };
+};
 interface Props {
-  properties:{[key: string]: string | boolean | number | null };
+  properties:Element
   name: string;
 }
 export const Element = ({ properties, name }: Props) => {
@@ -40,7 +43,7 @@ export const Element = ({ properties, name }: Props) => {
       </CardContent>
       {Object.entries(elementProps).length > 3 ? (
         <CardFooter className="border-t-gray-200 border flex items-center justify-center text-center space-y-0 p-0 text-black cursor-pointer hover:bg-blue-950 hover:rounded-b-xl hover:text-white">
-          <ViewDetails properties={properties} name={name} />
+          <ViewDetails properties={properties} />
         </CardFooter>
       ) : (
         <p className="text-gray-100 text-center"> </p>

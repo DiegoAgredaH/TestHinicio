@@ -17,12 +17,13 @@ import { Icons } from "../../components/ui/Icons";
 type Element = {
   [key: string]: { [key: string]: string | boolean | number | null };
 };
+
+
 interface Props {
   properties: Element;
-  name: string;
 }
 
-export const ViewDetails = ({ properties, name }: Props) => {
+export const ViewDetails = ({ properties }: Props) => {
   // State to store the search term
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -65,15 +66,15 @@ export const ViewDetails = ({ properties, name }: Props) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
-          <DialogTitle>Edit '{name}'</DialogTitle>
+          <DialogTitle>Element Properties</DialogTitle>
           <DialogDescription>
-            Make the changes to the elements properties here
+            You can see all element properties here
           </DialogDescription>
         </DialogHeader>
         <div className="relative mb-4">
           <Input
             type="search"
-            placeholder="Search Element..."
+            placeholder="Search property..."
             className="py-2 pl-10 "
             value={searchTerm}
             onChange={handleSearch}
