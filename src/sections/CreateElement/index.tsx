@@ -50,7 +50,9 @@ export const CreateElement = () => {
   };
 
   const handleDelete = (key: number) => {
-    const newPropertyInputs = propertyInputs.filter((_, index) => index !== key);
+    const newPropertyInputs = propertyInputs.filter(
+      (_, index) => index !== key
+    );
     setPropertyInputs(newPropertyInputs);
   };
 
@@ -170,10 +172,10 @@ export const CreateElement = () => {
         </ScrollArea>
         <DialogFooter>
           <div className="space-x-2">
-            <Close asChild>
             <Button className="bg-blue-400" onClick={addProperty}>
               Add Property
             </Button>
+            <Close asChild>
               <Button onClick={handleCreateElement}>Save Element</Button>
             </Close>
           </div>
