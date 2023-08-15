@@ -22,15 +22,29 @@ import { useToast } from "../../components/ui/use-toast";
 import { ScrollArea, ScrollBar } from "../../components/ui/ScrollArea";
 
 interface EnergySystemProperties {
-  [key: string]: {
-    [key: string]:
-      | boolean
-      | string
-      | number
-      | null
-      | Record<string, boolean | string | number | null>;
-  } | number | boolean | string | null;
+  [key: string]:
+    | {
+        [key: string]:
+          | boolean
+          | string
+          | number
+          | null
+          | Record<string, boolean | string | number | null>;
+      }
+    | number
+    | boolean
+    | string
+    | null;
 }
+
+interface PropertyInput {
+  property: string;
+  value: string;
+}
+
+type Properties = {
+  [prop: string]: number | boolean | string | null;
+};
 
 export const EditSystem = () => {
   // Get the system properties from Redux state
@@ -45,6 +59,8 @@ export const EditSystem = () => {
   // State for edited system properties
   const [editedSystemProperties, setEditedSystemProperties] =
     useState<InitialState>(systemProperties);
+
+  const [propertyInputs, setPropertyInputs] = useState<PropertyInput[]>([]);
 
   const energySystemProperties: EnergySystemProperties =
     editedSystemProperties.energySystem.Energy_System || {};
@@ -75,16 +91,37 @@ export const EditSystem = () => {
 
   // Function to PUT request to the API with the system properties updated
   const handleEditSystem = () => {
+    let newEnergySystem = {
+      ...editedSystemProperties?.energySystem.Energy_System,
+    };
+
+    if (propertyInputs.length > 0) {
+      newEnergySystem = propertyInputs.reduce((updatedSystem, input) => {
+        return {
+          ...updatedSystem,
+          [input.property]: input.value,
+        };
+      }, newEnergySystem);
+    }
+
     fetchData(
       "PUT",
       {},
-      JSON.stringify({ id: 0, data: editedSystemProperties?.energySystem })
+      JSON.stringify({ id: 0, data: { Energy_System: newEnergySystem } })
     );
+
+    setPropertyInputs([]);
+  };
+
+  const handleDeleteProperty = (indexToDelete: number) => {
+    const newPropertyInputs = propertyInputs.filter(
+      (_, index) => index !== indexToDelete
+    );
+    setPropertyInputs(newPropertyInputs);
   };
 
   // Function to handle property deletion
   const handleDelete = (key: string) => {
-    
     const updatedListElements = {
       ...editedSystemProperties?.energySystem.Energy_System,
     };
@@ -101,6 +138,15 @@ export const EditSystem = () => {
     setEditedSystemProperties({
       energySystem: updatedEnergySystem,
     });
+  };
+
+  // Function to add new property input fields
+  const addProperty = () => {
+    if (propertyInputs) {
+      setPropertyInputs([...propertyInputs, { property: "", value: "" }]);
+    } else {
+      setPropertyInputs([{ property: "", value: "" }]);
+    }
   };
 
   // Update editedSystemProperties when the Redux state changes
@@ -143,6 +189,39 @@ export const EditSystem = () => {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-[400px]">
+          {propertyInputs?.map((input, index) => (
+            <div key={index} className="mt-2 mr-4 flex items-center">
+              <Input
+                type="text"
+                defaultValue={input.property}
+                placeholder={"Property:"}
+                onChange={(e) => {
+                  const updatedInputs = [...propertyInputs];
+                  updatedInputs[index].property = e.target.value;
+                  setPropertyInputs(updatedInputs);
+                }}
+                className="mr-2"
+              />
+              <Input
+                type="text"
+                defaultValue={input.value}
+                placeholder={"Value"}
+                onChange={(e) => {
+                  const updatedInputs = [...propertyInputs];
+                  updatedInputs[index].value = e.target.value;
+                  setPropertyInputs(updatedInputs);
+                }}
+              />
+              <Button
+                variant="default"
+                className="hover:bg-blue-400 bg-transparent text-black h-6 w-6 m-2"
+                size="icon"
+                onClick={() => handleDeleteProperty(index)}
+              >
+                <Icons.trash className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
           <div className="grid gap-4 py-4">
             {filteredProperties.map((key) => (
               <div key={key} className="mt-2 flex items-center mr-4">
@@ -174,6 +253,9 @@ export const EditSystem = () => {
         </ScrollArea>
 
         <DialogFooter>
+          <Button className="bg-blue-400" onClick={addProperty}>
+            Add Property
+          </Button>
           <Close asChild>
             <Button onClick={handleEditSystem}>Save changes</Button>
           </Close>
