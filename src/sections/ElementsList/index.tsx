@@ -49,10 +49,7 @@ export const ElementsList = () => {
 
     // Loop through the elements and filter them based on the search term
     for (const key in elements) {
-      if (
-        typeof elements[key] === "string" &&
-        key.toLowerCase().includes(searchTerm.toLowerCase())
-      ) {
+      if (key.toLowerCase().includes(searchTerm.toLowerCase())) {
         filtered[key] = elements[key];
       }
     }
